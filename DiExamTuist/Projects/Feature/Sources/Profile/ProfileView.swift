@@ -2,13 +2,13 @@
 //  ProfileView.swift
 //  Feature
 //
-//  Created by 이지훈 on 6/30/25.
+//  Created by 이지훈 on 7/1/25.
 //
 
 import SwiftUI
 
 public struct ProfileView: View {
-    @Environment(AppCoordinator.self) var coordinator
+    @Environment(ProfileCoordinator.self) var coordinator
     @StateObject private var viewModel = ProfileViewModel()
     
     public init() {
@@ -38,7 +38,21 @@ public struct ProfileView: View {
             
             VStack(spacing: 15) {
                 Button(action: {
-                    viewModel.requestLogout()
+                    coordinator.push(.editProfile)
+                }) {
+                    HStack {
+                        Image(systemName: "person.crop.circle.badge.plus")
+                        Text("프로필 편집")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                
+                Button(action: {
+                    coordinator.sheet(.logout)
                 }) {
                     HStack {
                         Image(systemName: "arrow.right.square")
@@ -50,35 +64,10 @@ public struct ProfileView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
                 }
-                
-                Button(action: {
-                    coordinator.pop()
-                }) {
-                    HStack {
-                        Image(systemName: "arrow.left")
-                        Text("뒤로가기")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                }
             }
             .padding(.top, 30)
         }
         .padding()
         .navigationTitle("프로필")
-        .alert("로그아웃", isPresented: $viewModel.showLogoutAlert) {
-            Button("취소", role: .cancel) {
-                viewModel.cancelLogout()
-            }
-            Button("로그아웃", role: .destructive) {
-                viewModel.confirmLogout()
-                coordinator.push(.login)
-            }
-        } message: {
-            Text("정말로 로그아웃 하시겠습니까?")
-        }
     }
 }

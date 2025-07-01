@@ -5,12 +5,6 @@
 //  Created by 이지훈 on 7/1/25.
 //
 
-
-//
-//  Projects/Core/Sources/DI/Coordinatorable.swift
-//  새로운 Coordinator Pattern
-//
-
 import SwiftUI
 
 // MARK: - Coordinatorable Protocol
@@ -39,7 +33,7 @@ public protocol Coordinatorable: AnyObject {
 // MARK: - Default Implementation
 public extension Coordinatorable {
     func push(_ page: Screen...) {
-        page.forEach { 
+        page.forEach {
             path.append($0)
             print("🔄 화면 이동: \($0)")
         }

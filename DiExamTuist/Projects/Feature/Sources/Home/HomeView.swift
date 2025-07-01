@@ -2,13 +2,13 @@
 //  HomeView.swift
 //  Feature
 //
-//  Created by 이지훈 on 6/30/25.
+//  Created by 이지훈 on 7/1/25.
 //
 
 import SwiftUI
 
 public struct HomeView: View {
-    @Environment(AppCoordinator.self) var coordinator
+    @Environment(HomeCoordinator.self) var coordinator
     @StateObject private var viewModel = HomeViewModel()
     
     public init() {
@@ -30,34 +30,35 @@ public struct HomeView: View {
                     .fontWeight(.semibold)
             }
             
-            Text("Tuist 모듈화 + Assembly Pattern")
+            Text("Feature별 독립 Coordinator")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
             
             VStack(spacing: 15) {
                 NavigationButton(
-                    title: "프로필 보기",
-                    icon: "person.circle",
-                    color: .green
+                    title: "설정",
+                    icon: "gearshape",
+                    color: .blue
                 ) {
-                    coordinator.push(.profile)
+                    coordinator.push(.settings)
                 }
                 
-                NavigationButton(
-                    title: "로그인",
-                    icon: "person.badge.key",
-                    color: .orange
-                ) {
-                    coordinator.push(.login)
-                }
-                
-                Button("설정") {
-                    coordinator.sheet(.settings)
+                Button("사용자 정보") {
+                    coordinator.sheet(.userInfo)
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.gray)
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                
+                Button("튜토리얼") {
+                    coordinator.fullCover(.tutorial)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.purple)
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }
@@ -74,7 +75,6 @@ public struct HomeView: View {
         }
     }
 }
-
 
 // MARK: - Reusable Navigation Button
 struct NavigationButton: View {

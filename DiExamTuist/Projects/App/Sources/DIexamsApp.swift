@@ -1,21 +1,19 @@
 //
-//  App Module Main Files
+//  DiExamTuistApp.swift
 //  App
 //
-//  Tuist 모듈화 환경 - App 모듈
+//  Created by 이지훈 on 7/1/25.
 //
 
 import SwiftUI
-import Core
 import Feature
 
-// MARK: - Main App
 @main
 struct DiExamTuistApp: App {
     
     init() {
         print("🚀 DiExamTuist 앱 시작")
-        // Feature 모듈에서 모든 의존성 설정
+        // Feature 모듈에서 모든 DI 설정 처리
         FeatureAssembly.configureAll()
         print("✅ 앱 초기화 완료")
     }
