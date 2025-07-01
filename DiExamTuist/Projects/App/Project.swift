@@ -20,16 +20,6 @@ let project = Project(
             dependencies: [
                 .project(target: "Feature", path: "../Feature")
             ]
-        ),
-        .target(
-            name: "AppTests",
-            destinations: .iOS,
-            product: .unitTests,
-            bundleId: "io.tuist.DiExamTuist.AppTests",
-            sources: ["Tests/**"],
-            dependencies: [
-                .target(name: "DiExamTuist")
-            ]
         )
     ]
 )
