@@ -5,25 +5,20 @@
 //  Created by 이지훈 on 6/30/25.
 //
 
-import Foundation
 import SwiftUI
+import Core
 import Domain
 
-// MARK: - Profile View Model
-public class ProfileViewModel: ObservableObject {
+public final class ProfileViewModel: ObservableObject {
     @Published public var user: User?
     @Published public var isLoading: Bool = false
+    @Published public var showLogoutAlert: Bool = false
     
-    private let getCurrentUserUseCase: GetCurrentUserUseCase
-    private let logoutUseCase: LogoutUseCase
-    private let router: any Router
+    @Dependency private var getCurrentUserUseCase: GetCurrentUserUseCaseProtocol
+    @Dependency private var logoutUseCase: LogoutUseCaseProtocol
     
-    public init(getCurrentUserUseCase: GetCurrentUserUseCase,
-         logoutUseCase: LogoutUseCase,
-         router: any Router) {
-        self.getCurrentUserUseCase = getCurrentUserUseCase
-        self.logoutUseCase = logoutUseCase
-        self.router = router
+    public init() {
+        print("👤 ProfileViewModel 생성 (Property Wrapper 방식)")
         loadProfile()
     }
     
@@ -35,15 +30,26 @@ public class ProfileViewModel: ObservableObject {
             
             self.user = self.getCurrentUserUseCase.execute()
             self.isLoading = false
+            
+            if let user = self.user {
+                print("👤 프로필 로드 완료: \(user.name)")
+            }
         }
     }
     
-    public func logout() {
-        logoutUseCase.execute()
-        router.navigate(to: .login)
+    public func requestLogout() {
+        print("🚪 로그아웃 요청")
+        showLogoutAlert = true
     }
     
-    public func goBack() {
-        router.goBack()
+    public func confirmLogout() {
+        print("✅ 로그아웃 확인")
+        logoutUseCase.execute()
+        showLogoutAlert = false
+    }
+    
+    public func cancelLogout() {
+        print("❌ 로그아웃 취소")
+        showLogoutAlert = false
     }
 }

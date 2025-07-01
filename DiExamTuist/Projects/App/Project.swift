@@ -17,10 +17,10 @@ let project = Project(
                 ]
             ),
             sources: ["Sources/**"],
-            resources: ["Resources/**"],
+//            resources: ["Resources/**"],
             dependencies: [
                 .project(target: "Feature", path: "../Feature"),
-                .project(target: "Shared", path: "../Shared")
+                .project(target: "Core", path: "../Core")
             ]
         ),
         .target(

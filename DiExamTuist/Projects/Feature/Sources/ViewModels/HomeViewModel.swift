@@ -5,23 +5,22 @@
 //  Created by 이지훈 on 6/30/25.
 //
 
-import Foundation
 import SwiftUI
 import Combine
+import Core
 import Domain
 
-// MARK: - Home View Model
-public class HomeViewModel: ObservableObject {
+public final class HomeViewModel: ObservableObject {
     @Published public var userName: String = ""
     @Published public var isLoading: Bool = false
     
-    private let getCurrentUserUseCase: GetCurrentUserUseCase
-    private let router: any Router
+    // Property Wrapper로 의존성 자동 주입
+    @Dependency private var getCurrentUserUseCase: GetCurrentUserUseCaseProtocol
+    
     private var cancellables = Set<AnyCancellable>()
     
-    public init(getCurrentUserUseCase: GetCurrentUserUseCase, router: any Router) {
-        self.getCurrentUserUseCase = getCurrentUserUseCase
-        self.router = router
+    public init() {
+        print("🏠 HomeViewModel 생성 (Property Wrapper 방식)")
         loadUserData()
     }
     
@@ -33,16 +32,14 @@ public class HomeViewModel: ObservableObject {
             
             if let user = self.getCurrentUserUseCase.execute() {
                 self.userName = user.name
+                print("👤 사용자 데이터 로드 완료: \(user.name)")
             }
             self.isLoading = false
         }
     }
     
-    public func navigateToProfile() {
-        router.navigate(to: .profile)
-    }
-    
-    public func navigateToLogin() {
-        router.navigate(to: .login)
+    public func refreshUserData() {
+        print("🔄 사용자 데이터 새로고침")
+        loadUserData()
     }
 }

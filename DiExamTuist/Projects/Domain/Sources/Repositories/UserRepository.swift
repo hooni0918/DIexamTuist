@@ -7,8 +7,7 @@
 
 import Foundation
 
-// MARK: - User Repository Protocol
-public protocol UserRepository {
+public protocol UserRepositoryProtocol {
     func getCurrentUser() -> User?
     func updateUser(_ user: User)
 }

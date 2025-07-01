@@ -6,17 +6,26 @@
 //
 
 import SwiftUI
+import Core
 import Feature
 
+// MARK: - Content View
 struct ContentView: View {
-    var body: some View {
-        MainView()
+    @State private var coordinator: AppCoordinator
+    
+    init() {
+        print("📱 ContentView 초기화")
+        // DI Container에서 Coordinator 가져오기
+        let coordinator = DIContainer.shared.resolve(AppCoordinator.self)
+        self._coordinator = State(initialValue: coordinator)
+        print("🧭 AppCoordinator 주입 완료")
     }
-}
-
-// MARK: - Preview Provider
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    
+    var body: some View {
+        AppCoordinatorView()
+            .environment(coordinator)
+            .onAppear {
+                print("✅ 앱 화면 표시 완료")
+            }
     }
 }

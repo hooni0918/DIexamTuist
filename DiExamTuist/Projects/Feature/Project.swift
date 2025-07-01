@@ -13,10 +13,9 @@ let project = Project(
             bundleId: "io.tuist.DiExamTuist.Feature",
             sources: ["Sources/**"],
             dependencies: [
-                .project(target: "Domain", path: "../Domain"),
-                .project(target: "Data", path: "../Data"),
-                .project(target: "Shared", path: "../Shared"),
-                .package(product: "Swinject")
+                .project(target: "Core", path: "../Core"),
+                            .project(target: "Domain", path: "../Domain"),
+                            .project(target: "Data", path: "../Data")
             ]
         ),
         .target(

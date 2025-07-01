@@ -8,14 +8,11 @@
 import SwiftUI
 
 public struct HomeView: View {
-    @StateObject private var viewModel: HomeViewModel
-    private let router: any Router
+    @Environment(AppCoordinator.self) var coordinator
+    @StateObject private var viewModel = HomeViewModel()
     
-    public init(viewModel: HomeViewModel, router: any Router) {
-        print("🏠 HomeView 초기화 시작")
-        self._viewModel = StateObject(wrappedValue: viewModel)
-        self.router = router
-        print("✅ HomeView 초기화 완료")
+    public init() {
+        print("🏠 HomeView 초기화")
     }
     
     public var body: some View {
@@ -33,47 +30,71 @@ public struct HomeView: View {
                     .fontWeight(.semibold)
             }
             
-            Text("Factory Pattern 클린 아키텍처 앱입니다")
+            Text("Tuist 모듈화 + Assembly Pattern")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
             
             VStack(spacing: 15) {
-                Button(action: {
-                    print("🔄 프로필로 이동 요청")
-                    router.navigate(to: .profile)
-                }) {
-                    HStack {
-                        Image(systemName: "person.circle")
-                        Text("프로필 보기")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                    }
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                NavigationButton(
+                    title: "프로필 보기",
+                    icon: "person.circle",
+                    color: .green
+                ) {
+                    coordinator.push(.profile)
                 }
                 
-                Button(action: {
-                    print("🔄 로그인으로 이동 요청")
-                    router.navigate(to: .login)
-                }) {
-                    HStack {
-                        Image(systemName: "person.badge.key")
-                        Text("로그인")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                    }
-                    .padding()
-                    .background(Color.orange)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                NavigationButton(
+                    title: "로그인",
+                    icon: "person.badge.key",
+                    color: .orange
+                ) {
+                    coordinator.push(.login)
                 }
+                
+                Button("설정") {
+                    coordinator.sheet(.settings)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.gray)
+                .foregroundColor(.white)
+                .cornerRadius(10)
             }
             .padding(.top, 20)
         }
         .padding()
         .navigationTitle("홈")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("새로고침") {
+                    viewModel.refreshUserData()
+                }
+            }
+        }
+    }
+}
+
+
+// MARK: - Reusable Navigation Button
+struct NavigationButton: View {
+    let title: String
+    let icon: String
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: icon)
+                Text(title)
+                Spacer()
+                Image(systemName: "chevron.right")
+            }
+            .padding()
+            .background(color)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+        }
     }
 }

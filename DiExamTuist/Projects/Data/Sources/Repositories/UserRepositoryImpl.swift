@@ -1,28 +1,23 @@
 //
-//  UserRepositoryImpl.swift
-//  Data
+//  Repository Protocols
+//  Domain/RepositoryInterface
 //
-//  Created by 이지훈 on 6/30/25.
+//  Tuist 모듈화 환경 - Domain 모듈
 //
 
 import Foundation
 import Domain
 
-// MARK: - User Repository Implementation
-public class UserRepositoryImpl: UserRepository {
-    private var currentUser: User?
+public final class LoginUseCase: LoginUseCaseProtocol {
+    private let authRepository: AuthRepositoryProtocol
     
-    public init() {}
-    
-    public func getCurrentUser() -> User? {
-        return currentUser ?? User(
-            id: "1",
-            name: "이지훈",
-            email: "test@example.com"
-        )
+    public init(authRepository: AuthRepositoryProtocol) {
+        self.authRepository = authRepository
+        print("🔑 LoginUseCase 생성")
     }
     
-    public func updateUser(_ user: User) {
-        currentUser = user
+    public func execute(email: String, password: String) async -> Result<Bool, Error> {
+        print("🔐 로그인 시도: \(email)")
+        return await authRepository.login(email: email, password: password)
     }
 }

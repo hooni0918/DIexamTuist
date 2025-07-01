@@ -8,18 +8,6 @@
 import Foundation
 
 // MARK: - Login Use Case
-public protocol LoginUseCase {
+public protocol LoginUseCaseProtocol {
     func execute(email: String, password: String) async -> Result<Bool, Error>
-}
-
-public class LoginUseCaseImpl: LoginUseCase {
-    private let authRepository: AuthRepository
-    
-    public init(authRepository: AuthRepository) {
-        self.authRepository = authRepository
-    }
-    
-    public func execute(email: String, password: String) async -> Result<Bool, Error> {
-        return await authRepository.login(email: email, password: password)
-    }
 }

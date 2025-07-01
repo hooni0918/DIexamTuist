@@ -7,19 +7,6 @@
 
 import Foundation
 
-// MARK: - Logout Use Case
-public protocol LogoutUseCase {
+public protocol LogoutUseCaseProtocol {
     func execute()
-}
-
-public class LogoutUseCaseImpl: LogoutUseCase {
-    private let authRepository: AuthRepository
-    
-    public init(authRepository: AuthRepository) {
-        self.authRepository = authRepository
-    }
-    
-    public func execute() {
-        authRepository.logout()
-    }
 }

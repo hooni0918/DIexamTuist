@@ -7,8 +7,7 @@
 
 import Foundation
 
-// MARK: - Auth Repository Protocol
-public protocol AuthRepository {
+public protocol AuthRepositoryProtocol {
     func login(email: String, password: String) async -> Result<Bool, Error>
     func logout()
     func isLoggedIn() -> Bool

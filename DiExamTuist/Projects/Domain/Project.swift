@@ -10,7 +10,6 @@ let project = Project(
             bundleId: "io.tuist.DiExamTuist.Domain",
             sources: ["Sources/**"],
             dependencies: [
-                .project(target: "Shared", path: "../Shared")
             ]
         ),
         .target(

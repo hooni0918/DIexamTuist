@@ -8,14 +8,11 @@
 import SwiftUI
 
 public struct ProfileView: View {
-    @StateObject private var viewModel: ProfileViewModel
-    private let router: any Router
+    @Environment(AppCoordinator.self) var coordinator
+    @StateObject private var viewModel = ProfileViewModel()
     
-    public init(viewModel: ProfileViewModel, router: any Router) {
-        print("👤 ProfileView 초기화 시작")
-        self._viewModel = StateObject(wrappedValue: viewModel)
-        self.router = router
-        print("✅ ProfileView 초기화 완료")
+    public init() {
+        print("👤 ProfileView 초기화")
     }
     
     public var body: some View {
@@ -41,8 +38,7 @@ public struct ProfileView: View {
             
             VStack(spacing: 15) {
                 Button(action: {
-                    print("🚪 로그아웃 요청")
-                    viewModel.logout()
+                    viewModel.requestLogout()
                 }) {
                     HStack {
                         Image(systemName: "arrow.right.square")
@@ -56,8 +52,7 @@ public struct ProfileView: View {
                 }
                 
                 Button(action: {
-                    print("⬅️ 뒤로가기 요청")
-                    router.goBack()
+                    coordinator.pop()
                 }) {
                     HStack {
                         Image(systemName: "arrow.left")
@@ -74,5 +69,16 @@ public struct ProfileView: View {
         }
         .padding()
         .navigationTitle("프로필")
+        .alert("로그아웃", isPresented: $viewModel.showLogoutAlert) {
+            Button("취소", role: .cancel) {
+                viewModel.cancelLogout()
+            }
+            Button("로그아웃", role: .destructive) {
+                viewModel.confirmLogout()
+                coordinator.push(.login)
+            }
+        } message: {
+            Text("정말로 로그아웃 하시겠습니까?")
+        }
     }
 }

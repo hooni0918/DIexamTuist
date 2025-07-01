@@ -7,19 +7,6 @@
 
 import Foundation
 
-// MARK: - Get Current User Use Case
-public protocol GetCurrentUserUseCase {
+public protocol GetCurrentUserUseCaseProtocol {
     func execute() -> User?
-}
-
-public class GetCurrentUserUseCaseImpl: GetCurrentUserUseCase {
-    private let userRepository: UserRepository
-    
-    public init(userRepository: UserRepository) {
-        self.userRepository = userRepository
-    }
-    
-    public func execute() -> User? {
-        return userRepository.getCurrentUser()
-    }
 }

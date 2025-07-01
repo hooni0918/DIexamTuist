@@ -8,14 +8,11 @@
 import SwiftUI
 
 public struct LoginView: View {
-    @StateObject private var viewModel: LoginViewModel
-    private let router: any Router
+    @Environment(AppCoordinator.self) var coordinator
+    @StateObject private var viewModel = LoginViewModel()
     
-    public init(viewModel: LoginViewModel, router: any Router) {
-        print("🔐 LoginView 초기화 시작")
-        self._viewModel = StateObject(wrappedValue: viewModel)
-        self.router = router
-        print("✅ LoginView 초기화 완료")
+    public init() {
+        print("🔐 LoginView 초기화")
     }
     
     public var body: some View {
@@ -46,7 +43,6 @@ public struct LoginView: View {
             
             Button(action: {
                 Task {
-                    print("🔑 로그인 시도 시작")
                     await performLogin()
                 }
             }) {
@@ -72,10 +68,7 @@ public struct LoginView: View {
         await viewModel.login()
         
         if viewModel.errorMessage.isEmpty && !viewModel.isLoading {
-            print("✅ 로그인 성공 - 홈으로 이동")
-            router.navigate(to: .home)
-        } else {
-            print("❌ 로그인 실패: \(viewModel.errorMessage)")
+            coordinator.push(.home)
         }
     }
 }
