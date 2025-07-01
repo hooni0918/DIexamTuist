@@ -11,7 +11,7 @@ import Feature
 struct ContentView: View {
     
     @State private var routeState: ContentView.RouteType = .home
-    private let coordinatㅣorFactory: CoordinatorFactory = CoordinatorFactory()
+    private let coordinatorFactory: CoordinatorFactory = CoordinatorFactory()
     
     init() {
         print("📱 ContentView 초기화")
