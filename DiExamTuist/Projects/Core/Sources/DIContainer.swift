@@ -1,10 +1,3 @@
-//
-//  DIContainer.swift
-//  Core
-//
-//  Created by 이지훈 on 7/1/25.
-//
-
 import Foundation
 import Swinject
 
@@ -35,7 +28,6 @@ public final class DIContainer {
         return service
     }
     
-    /// 객체 등록 (Swinject 완전 은닉)
     public func register<T>(
         _ serviceType: T.Type,
         scope: HGObjectScope = .graph,
@@ -48,7 +40,6 @@ public final class DIContainer {
         print("✅ \(serviceType) 등록 완료 (Scope: \(scope))")
     }
     
-    /// Assembly를 이용한 일괄 등록 (Legacy 지원 - 사용 안함)
     public func registerAssembly(assembly: [Assembly]) {
         _ = Assembler(assembly, container: container)
         print("🔧 Assembly 등록 완료: \(assembly.count)개")
@@ -72,10 +63,20 @@ public struct DIResolver {
 
 @propertyWrapper
 public class Dependency<T> {
-    public let wrappedValue: T
+    private var _wrappedValue: T?
+    
+    public var wrappedValue: T {
+        if let value = _wrappedValue {
+            return value
+        }
+        
+        let resolved = DIContainer.shared.resolve(T.self)
+        _wrappedValue = resolved
+        print("🔌 \(T.self) 의존성 주입 완료 (지연 로딩)")
+        return resolved
+    }
     
     public init() {
-        self.wrappedValue = DIContainer.shared.resolve(T.self)
-        print("🔌 \(T.self) 의존성 주입 완료")
+        print("🔧 \(T.self) 의존성 준비 (실제 주입은 지연)")
     }
 }

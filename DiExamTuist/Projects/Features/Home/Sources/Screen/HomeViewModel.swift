@@ -10,7 +10,7 @@ import HomeDomain
 import HomeData
 import Core
 
-// MARK: - HomeViewModel: DI 방식 비교
+// MARK: - HomeViewModel: @ObservationIgnored + @Dependency 방식
 @Observable
 public final class HomeViewModel {
    public var userName: String = ""
@@ -19,13 +19,14 @@ public final class HomeViewModel {
    public var isLoading: Bool = false
    public var errorMessage: String = ""
    
-   // MARK: - 방식 1: @ObservationIgnored + @Dependency (권장)
+   // MARK: - 방식 1: @ObservationIgnored + @Dependency (현재 사용 중)
    /*
     장점:
     - Property Wrapper의 편의성 활용 (자동 주입)
     - 타입 안전성 보장
     - 코드 간결성
     - DI Container의 생명주기 관리 활용
+    - 지연 로딩으로 초기화 순서 문제 해결
     
     단점:
     - @ObservationIgnored 추가 필요 (SwiftUI 관찰에서 제외)
@@ -33,9 +34,10 @@ public final class HomeViewModel {
     
     동작 원리:
     - @Observable: SwiftUI 반응형 시스템을 위한 매크로
-    - @Dependency: DI Container에서 자동 resolve하는 Property Wrapper
+    - @Dependency: DI Container에서 지연 로딩으로 resolve하는 Property Wrapper
     - @ObservationIgnored: SwiftUI 관찰 대상에서 제외 (DI용 프로퍼티는 UI 변화 추적 불필요)
     - 컴파일 타임에 두 매크로가 같은 프로퍼티를 변환하려다 충돌 → @ObservationIgnored로 해결
+    - 지연 로딩: 실제 사용 시점에 resolve하여 초기화 순서 문제 해결
     */
    @ObservationIgnored
    @Dependency private var getCurrentUserUseCase: GetCurrentUserUseCaseProtocol
@@ -44,58 +46,30 @@ public final class HomeViewModel {
    @ObservationIgnored
    @Dependency private var switchUserUseCase: SwitchUserUseCaseProtocol
    
-   // MARK: - 방식 2: 직접 resolve (현재 방식)
-   /*
-    장점:
-    - @Observable과 충돌 없음
-    - 명시적 의존성 관리 (init에서 한 번에 확인 가능)
-    - Property Wrapper 매크로 문제 회피
-    - 디버깅 용이 (resolve 시점 명확)
-    
-    단점:
-    - 보일러플레이트 코드 증가
-    - 수동 resolve 필요
-    - init에서 모든 의존성 수동 관리
-    
-    동작 원리:
-    - DIContainer.shared.resolve()로 수동 주입
-    - private let으로 불변성 보장
-    - @Observable이 이 프로퍼티들을 건드리지 않음 (let이므로)
-    */
-   private let getCurrentUserUseCaseManual: GetCurrentUserUseCaseProtocol
-   private let getAllUsersUseCaseManual: GetAllUsersUseCaseProtocol
-   private let switchUserUseCaseManual: SwitchUserUseCaseProtocol
-   
    public init() {
-       print("🏠 HomeViewModel 생성 - DI 방식 비교")
+       print("🏠 HomeViewModel 생성 - 지연 의존성 주입 방식")
        
        // Data 모듈 활성화 (실제 구현체들을 DI Container에 등록)
+       // 이 시점에서 @Dependency들은 아직 resolve되지 않음 (지연 로딩)
        HomeDataModule.configure()
        
-       // 방식 2: 수동 resolve (매크로 충돌 없는 안전한 방법)
-       self.getCurrentUserUseCaseManual = DIContainer.shared.resolve(GetCurrentUserUseCaseProtocol.self)
-       self.getAllUsersUseCaseManual = DIContainer.shared.resolve(GetAllUsersUseCaseProtocol.self)
-       self.switchUserUseCaseManual = DIContainer.shared.resolve(SwitchUserUseCaseProtocol.self)
-       
-       // 초기 데이터 로드
+       // 초기 데이터 로드 (실제 UseCase 사용 시점에 resolve 발생)
        Task {
            await loadUserData()
            await loadAllUsers()
        }
    }
    
-   // MARK: - 비즈니스 로직 (두 방식 모두 동일한 결과)
+   // MARK: - 비즈니스 로직
    @MainActor
    private func loadUserData() async {
        isLoading = true
        errorMessage = ""
        
        do {
-           // 실제 사용 시에는 둘 중 하나만 선택
-           // 현재는 비교를 위해 방식 2 사용
+           // 이 시점에서 getCurrentUserUseCase가 처음 접근되어 resolve 발생
            let user = await Task.detached { [weak self] in
-               return self?.getCurrentUserUseCaseManual.execute()
-               // 방식 1을 사용한다면: self?.getCurrentUserUseCase.execute()
+               return self?.getCurrentUserUseCase.execute()
            }.value
            
            if let user = user {
@@ -115,9 +89,9 @@ public final class HomeViewModel {
    
    @MainActor
    private func loadAllUsers() async {
+       // getAllUsersUseCase 첫 접근 시 resolve 발생
        let users = await Task.detached { [weak self] in
-           return self?.getAllUsersUseCaseManual.execute() ?? []
-           // 방식 1을 사용한다면: self?.getAllUsersUseCase.execute() ?? []
+           return self?.getAllUsersUseCase.execute() ?? []
        }.value
        
        allUsers = users
@@ -134,9 +108,9 @@ public final class HomeViewModel {
    public func switchUser(to user: User) async {
        isLoading = true
        
+       // switchUserUseCase 첫 접근 시 resolve 발생
        await Task.detached { [weak self] in
-           self?.switchUserUseCaseManual.execute(userId: user.id)
-           // 방식 1을 사용한다면: self?.switchUserUseCase.execute(userId: user.id)
+           self?.switchUserUseCase.execute(userId: user.id)
        }.value
        
        await loadUserData()
@@ -145,24 +119,34 @@ public final class HomeViewModel {
 }
 
 /*
-MARK: - 매크로 충돌 상세 설명
-
-@Observable 매크로가 하는 일:
-```swift
-// 원본
-@Observable class HomeViewModel {
-    var userName: String = ""
-    @Dependency private var useCase: Protocol
-}
-
-// @Observable이 변환한 코드 (내부적으로)
-class HomeViewModel {
-    private var _userName: String = ""
-    private var _useCase: ??? // 여기서 충돌!
-    
-    var userName: String {
-        get { /* 관찰 추적 코드 */ return _userName }
-        set { /* 관찰 추적 코드 */ _userName = newValue }
-    }
-}
-*/
+ MARK: - 방식 2: 직접 resolve (대안)
+ 만약 방식 2를 사용했다면:
+ 
+ // private let getCurrentUserUseCaseManual: GetCurrentUserUseCaseProtocol
+ // private let getAllUsersUseCaseManual: GetAllUsersUseCaseProtocol
+ // private let switchUserUseCaseManual: SwitchUserUseCaseProtocol
+ 
+ // init() {
+ //     HomeDataModule.configure()
+ //     self.getCurrentUserUseCaseManual = DIContainer.shared.resolve(GetCurrentUserUseCaseProtocol.self)
+ //     self.getAllUsersUseCaseManual = DIContainer.shared.resolve(GetAllUsersUseCaseProtocol.self)
+ //     self.switchUserUseCaseManual = DIContainer.shared.resolve(SwitchUserUseCaseProtocol.self)
+ // }
+ 
+ 장점: @Observable과 충돌 없음, 명시적 의존성 관리, 초기화 시점 명확
+ 단점: 보일러플레이트 코드 증가, 수동 resolve 필요
+ 
+ MARK: - 지연 로딩 @Dependency 동작 원리
+ 
+ 기존 @Dependency 문제:
+ ```swift
+ @propertyWrapper
+ public class Dependency<T> {
+ public let wrappedValue: T
+ 
+ public init() {
+ // 초기화 시점에 바로 resolve → 등록 전이라 에러!
+ self.wrappedValue = DIContainer.shared.resolve(T.self)
+ }
+ }
+ */
