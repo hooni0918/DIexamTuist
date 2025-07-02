@@ -11,7 +11,7 @@ let project = Project(
            sources: ["Sources/**"],
            dependencies: [
                .project(target: "HomeDomain", path: "../../Domain/Home"),
-               .project(target: "HomeData", path: "../../Data/Home"),
+               // .project(target: "HomeData", path: "../../Data/Home"), // ✅ 제거
                .project(target: "Core", path: "../../Core")
            ]
        )

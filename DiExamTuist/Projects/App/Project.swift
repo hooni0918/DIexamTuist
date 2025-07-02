@@ -26,6 +26,7 @@ let project = Project(
                 .project(target: "Core", path: "../Core"),
                 .project(target: "Shared", path: "../Shared")
                 
+                // ✅ Data 모듈들 완전 제거
             ]
         )
     ]
