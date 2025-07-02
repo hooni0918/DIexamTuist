@@ -1,3 +1,35 @@
+**다운로드 받아서 뷰는 딱히 뭐 없습니다 (GPT의존도 100% 뷰)** <br>
+뷰 내부가 어떻게 구현되어잇는지는 사실 아무 의미없고,, DI가 어떻게 흘러가는지, 어디서 어떻게 흘러가는지 위주로 봐주시면 됩니다. 화면 전환도 마찬가지로 Coordinator 방식으로 구현했는데 이 흐름이 어떻게 흘라가는지 봐주시면 좋을것같아요.
+
+## 현재 Home 의 경우 실제 Data에서 값을 받아온다 는 가정하에 @Dependancy 으로 구현이 되어있고 나머지 Login이나 Profile 같은 경우는 Mock데이터로 주입받는것을 상정한 코드입니다!
+
+<img width="825" alt="스크린샷 2025-07-02 오후 9 30 26" src="https://github.com/user-attachments/assets/1aa67284-a83b-45ca-b12d-57c098b4ab61" />
+
+
+```mermaid
+graph LR
+    subgraph Mock["Mock 방식"]
+        LV[LoginViewModel] --> LM[mockAccounts]
+        LM --> LR[즉시 결과]
+        
+        PV[ProfileViewModel] --> PM[mockProfiles]
+        PM --> PR[즉시 결과]
+    end
+    
+    subgraph DI["DI 방식"]
+        HV[HomeViewModel] --> HD[Property Wrapper]
+        HD --> DC[DIContainer]
+        DC --> UC[UseCase]
+        UC --> HR[Repository]
+        HR --> API[실제 데이터]
+    end
+    
+   
+```
+
+<br>
+
+
 ```swift
 @main
 struct DiExamTuistApp: App {
@@ -183,7 +215,27 @@ private func loadUserData() async {
 > 
 > 
 > **@Dependency 지연 로딩**: DI Container의 복잡한 의존성 해결 과정을 실제 사용 시점까지 미루는 것
-> 
+
+
+```mermaid
+flowchart TD
+    A[HomeViewModel 생성] --> B[Property Wrapper 초기화]
+    B --> C[wrappedValue = nil]
+    C --> D[DataModule configure]
+    D --> E[DI Container 등록]
+    
+    E --> F[첫 번째 접근]
+    F --> G{값이 있나?}
+    G -->|없음| H[DIContainer resolve]
+    G -->|있음| K[캐시된 값 반환]
+    
+    H --> I[인스턴스 생성]
+    I --> J[값 캐싱]
+    J --> K
+    
+    K --> L[비즈니스 로직 실행]
+    L --> M[다음 접근시 캐시 사용]
+```
 
 ## 8: Property Wrapper- 실제 Resolve
 
