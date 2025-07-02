@@ -229,7 +229,7 @@ public var wrappedValue: T {
 
 ## 10: 진짜 비즈니스 로직 실행
 
-모든 의존성이 해결되면  실제 비즈니스 로직이 실행됨
+모든 의존성이 resolve되면  실제 비즈니스 로직이 실행됨
 
 ```swift
 //GetCurrentUserUseCase.execute() 실행
@@ -268,28 +268,10 @@ public func getCurrentUser() -> User? {
 
 ```
 
-## Phase 12: 결과의 역순 전파
-
-데이터가 준비되면 결과가 역순으로 전파됨:
-
-1. `HomeRepositoryImpl` → `GetCurrentUserUseCase`
-2. `GetCurrentUserUseCase` → `HomeViewModel`
-3. `HomeViewModel` → `HomeView` (SwiftUI의 @Observable을 통해)
-4. `HomeView` → 화면 업데이트
-
-## 핵심 통찰: 왜 이렇게 복잡한 구조를 사용하는가?
-
-이 복잡해 보이는 구조의 진정한 가치를 이해해 보겠습니다.
-
-첫째, **테스트 가능성**입니다. 각 계층이 인터페이스를 통해 분리되어 있어서, HomeViewModel을 테스트할 때 실제 API를 호출할 필요 없이 Mock UseCase를 주입할 수 있습니다.
-
-둘째, **유연성**입니다. 만약 API 구조가 바뀌어도 `HomeRepositoryImpl`만 수정하면 되고, 비즈니스 로직이 바뀌어도 UseCase만 수정하면 됩니다.
-
-셋째, **재사용성**입니다. 다른 Feature에서도 같은 Repository나 UseCase를 사용할 수 있습니다.
 
 ---
 
-화면전환
+# 화면전환
 
 ## 화면 전환 아키텍처의 전체 구조
 
