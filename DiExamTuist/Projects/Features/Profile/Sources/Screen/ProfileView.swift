@@ -12,7 +12,7 @@ import ProfileDomain
 
 public struct ProfileView: View {
     @Environment(ProfileCoordinator.self) var coordinator
-    @StateObject private var viewModel = ProfileViewModel()
+    @State private var viewModel = ProfileViewModel()
     
     public init() {
         print("👤 ProfileView 초기화")
@@ -74,33 +74,7 @@ public struct ProfileView: View {
     }
 }
 
-public final class ProfileViewModel: ObservableObject {
-    @Published public var user: User?
-    @Published public var isLoading: Bool = false
-    
-    // ✅ Domain Protocol만 사용 (구현체는 모름!)
-    @Dependency private var getUserUseCase: GetUserUseCaseProtocol
-    
-    public init() {
-        print("👤 ProfileViewModel 생성 (Domain만 의존)")
-        loadProfile()
-    }
-    
-    private func loadProfile() {
-        isLoading = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            guard let self = self else { return }
-            
-            self.user = self.getUserUseCase.execute()
-            self.isLoading = false
-            
-            if let user = self.user {
-                print("👤 프로필 로드 완료: \(user.name)")
-            }
-        }
-    }
-}
+
 
 struct EditProfileView: View {
     @Environment(ProfileCoordinator.self) var coordinator

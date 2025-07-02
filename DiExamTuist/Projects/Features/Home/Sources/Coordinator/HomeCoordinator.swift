@@ -65,3 +65,46 @@ public enum HomeRouter {
         public var id: String { self.rawValue }
     }
 }
+
+
+struct SettingsView: View {
+    var body: some View {
+        VStack {
+            Text("⚙️ Settings")
+                .font(.largeTitle)
+                .bold()
+                .padding()
+            
+            Text("여기에 설정 관련 내용이 들어갑니다.")
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+struct UserInfoView: View {
+    var body: some View {
+        VStack {
+            Text("👤 사용자 정보")
+                .font(.largeTitle)
+                .bold()
+                .padding()
+            
+            Text("사용자 이름, 이메일 등 정보 표시 예정")
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+struct TutorialView: View {
+    var body: some View {
+        VStack {
+            Text("📘 튜토리얼")
+                .font(.largeTitle)
+                .bold()
+                .padding()
+            
+            Text("앱의 사용법을 소개하는 화면입니다.")
+                .foregroundColor(.secondary)
+        }
+    }
+}

@@ -12,7 +12,7 @@ import LoginDomain
 
 public struct LoginView: View {
     @Environment(LoginCoordinator.self) var coordinator
-    @StateObject private var viewModel = LoginViewModel()
+    @State private var viewModel = LoginViewModel()
     
     public init() {
         print("🔐 LoginView 초기화")
@@ -88,40 +88,6 @@ public struct LoginView: View {
     }
 }
 
-public final class LoginViewModel: ObservableObject {
-    @Published public var email: String = ""
-    @Published public var password: String = ""
-    @Published public var isLoading: Bool = false
-    @Published public var errorMessage: String = ""
-    
-    // ✅ Domain Protocol만 사용 (구현체는 모름!)
-    @Dependency private var loginUseCase: LoginUseCaseProtocol
-    
-    public init() {
-        print("🔐 LoginViewModel 생성 (Domain만 의존)")
-    }
-    
-    @MainActor
-    public func login() async {
-        isLoading = true
-        errorMessage = ""
-        
-        let result = await loginUseCase.execute(email: email, password: password)
-        
-        switch result {
-        case .success(let success):
-            if success {
-                print("✅ 로그인 성공")
-            } else {
-                errorMessage = "로그인에 실패했습니다."
-            }
-        case .failure(let error):
-            errorMessage = error.localizedDescription
-        }
-        
-        isLoading = false
-    }
-}
 
 struct SignUpView: View {
     @Environment(LoginCoordinator.self) var coordinator
