@@ -10,12 +10,10 @@ import Swinject
 import Domain
 import Data
 
-// MARK: - DI Container Protocol
 public protocol DIContainerProtocol {
     func resolve<T>(_ type: T.Type) -> T?
 }
 
-// MARK: - DI Container (Domain과 Data Layer만 관리)
 public class DIContainer: DIContainerProtocol {
     private let container = Container()
     
@@ -29,7 +27,6 @@ public class DIContainer: DIContainerProtocol {
     
     private func setupDependencies() {
         
-        // MARK: - Data Layer (매번 새 인스턴스)
         container.register(UserRepository.self) { _ in
             UserRepositoryImpl()
         }
@@ -38,7 +35,6 @@ public class DIContainer: DIContainerProtocol {
             AuthRepositoryImpl()
         }
         
-        // MARK: - Domain Layer
         container.register(GetCurrentUserUseCase.self) { resolver in
             GetCurrentUserUseCaseImpl(
                 userRepository: resolver.resolve(UserRepository.self)!
@@ -57,7 +53,6 @@ public class DIContainer: DIContainerProtocol {
             )
         }
         
-        // MARK: - Router (전역 상태 관리 필요하므로 여기서 관리)
         container.register((any Router).self) { _ in
             RouterImpl()
         }.inObjectScope(.container)

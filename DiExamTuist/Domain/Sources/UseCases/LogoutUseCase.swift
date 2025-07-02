@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Logout Use Case (Domain Layer)
 public protocol LogoutUseCase {
     func execute()
 }

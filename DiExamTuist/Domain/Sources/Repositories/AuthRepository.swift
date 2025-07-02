@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Auth Repository Protocol (Domain Layer)
 public protocol AuthRepository {
     func login(email: String, password: String) async -> Result<Bool, Error>
     func logout()

@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-// MARK: - Router Implementation (Presentation Layer)
 public class RouterImpl: Router {
     @Published public var currentRoute: Route = .home
     private var navigationStack: [Route] = [.home]

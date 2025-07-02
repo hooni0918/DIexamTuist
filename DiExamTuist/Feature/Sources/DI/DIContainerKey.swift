@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-// MARK: - Environment Key for DI Container
 public struct DIContainerKey: EnvironmentKey {
     public static let defaultValue: DIContainerProtocol = DIContainer()
 }
 
-// MARK: - Environment Values Extension
 public extension EnvironmentValues {
     var diContainer: DIContainerProtocol {
         get { self[DIContainerKey.self] }

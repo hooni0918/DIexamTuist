@@ -12,7 +12,6 @@ let project = Project(
             dependencies: [
                 .project(target: "ProfileDomain", path: "../../Domain/Profile"),
                 .project(target: "Core", path: "../../Core")
-                // ✅ Swinject 제거
             ]
         )
     ]

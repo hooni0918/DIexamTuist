@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Navigation Routes
 public enum Route: Hashable, CaseIterable {
     case home
     case profile

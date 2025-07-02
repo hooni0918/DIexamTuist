@@ -8,7 +8,6 @@
 import SwiftUI
 import Core
 import ProfileDomain
-// ❌ ProfileData import 제거!
 
 public struct ProfileView: View {
     @Environment(ProfileCoordinator.self) var coordinator

@@ -11,7 +11,6 @@ public struct LoginView: View {
     @StateObject private var viewModel: LoginViewModel
     private let router: any Router
     
-    // MARK: - 생성자 (의존성 주입)
     public init(viewModel: LoginViewModel, router: any Router) {
         print("🔐 LoginView 초기화 시작")
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -72,7 +71,6 @@ public struct LoginView: View {
     private func performLogin() async {
         await viewModel.login()
         
-        // 로그인 성공시 화면 전환
         if viewModel.errorMessage.isEmpty && !viewModel.isLoading {
             print("✅ 로그인 성공 - 홈으로 이동")
             router.navigate(to: .home)

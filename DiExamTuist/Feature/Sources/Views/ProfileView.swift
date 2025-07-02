@@ -11,7 +11,6 @@ public struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
     private let router: any Router
     
-    // MARK: - 생성자 (의존성 주입)
     public init(viewModel: ProfileViewModel, router: any Router) {
         print("👤 ProfileView 초기화 시작")
         self._viewModel = StateObject(wrappedValue: viewModel)

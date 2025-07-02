@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Error Types (Data Layer)
 public enum AuthError: Error {
     case invalidCredentials
     case networkError

@@ -10,7 +10,6 @@ import SwiftUI
 import Combine
 import Domain
 
-// MARK: - Home View Model (Presentation Layer)
 public class HomeViewModel: ObservableObject {
     @Published public var userName: String = ""
     @Published public var isLoading: Bool = false

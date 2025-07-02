@@ -8,7 +8,6 @@
 import Foundation
 import Swinject
 
-// MARK: - Core에서 Swinject 완전히 감싸기
 public enum HGObjectScope {
     case graph
     case container
@@ -56,7 +55,6 @@ public final class DIContainer {
     }
 }
 
-// MARK: - Data 모듈을 위한 Resolver 래퍼 (Swinject 은닉)
 public struct DIResolver {
     private let resolver: Resolver
     
@@ -72,7 +70,6 @@ public struct DIResolver {
     }
 }
 
-// MARK: - Property Wrapper for Dependency Injection
 @propertyWrapper
 public class Dependency<T> {
     public let wrappedValue: T

@@ -15,10 +15,8 @@ public final class LoginViewModel {
     public var isLoading: Bool = false
     public var errorMessage: String = ""
     
-    // ❌ DI 제거 - 레퍼런스 방식에서는 Mock 로직 사용
     // @Dependency private var loginUseCase: LoginUseCaseProtocol
     
-    // ✅ Mock 사용자 계정들
     private let mockAccounts: [(email: String, password: String)] = [
         ("test@example.com", "password123"),
         ("user@test.com", "test123"),
@@ -37,10 +35,8 @@ public final class LoginViewModel {
         
         print("🔑 로그인 시도 (Mock): \(email)")
         
-        // ✅ 실제 네트워크 호출 시뮬레이션
         try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5초 대기
         
-        // Mock 로그인 검증
         let isValidAccount = mockAccounts.contains { account in
             account.email == email && account.password == password
         }
@@ -51,7 +47,6 @@ public final class LoginViewModel {
             errorMessage = "올바른 이메일 형식이 아닙니다."
         } else if isValidAccount {
             print("✅ 로그인 성공 (Mock)")
-            // 성공 처리 - 실제 앱에서는 화면 전환 등
         } else {
             errorMessage = "이메일 또는 비밀번호가 올바르지 않습니다.\n\nMock 계정:\ntest@example.com / password123"
         }
@@ -59,7 +54,6 @@ public final class LoginViewModel {
         isLoading = false
     }
     
-    // ✅ 나중에 Data 모듈 연동 시 이 메서드들만 수정하면 됨
     public func logout() {
         print("👋 로그아웃 (Mock)")
         email = ""

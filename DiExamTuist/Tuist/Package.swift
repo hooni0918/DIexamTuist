@@ -14,7 +14,6 @@ import PackageDescription
 let package = Package(
     name: "DiExamTuist",
     dependencies: [
-        // ✅ Swinject 의존성 추가
         .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
     ]
 )

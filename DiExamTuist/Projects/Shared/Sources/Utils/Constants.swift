@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - App Constants
 public struct Constants {
     public struct API {
         public static let baseURL = "https://api.example.com"

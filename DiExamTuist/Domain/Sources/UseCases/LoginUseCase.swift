@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Login Use Case (Domain Layer)
 public protocol LoginUseCase {
     func execute(email: String, password: String) async -> Result<Bool, Error>
 }

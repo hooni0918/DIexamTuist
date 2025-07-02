@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Logger (향후 확장용)
 public class Logger {
     public static let shared = Logger()
     

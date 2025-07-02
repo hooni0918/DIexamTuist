@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// MARK: - Coordinatorable Protocol
 @MainActor
 public protocol Coordinatorable: AnyObject {
     associatedtype Screen: Hashable
@@ -30,7 +29,6 @@ public protocol Coordinatorable: AnyObject {
     func fullCoverView(_ cover: FullScreen) -> FullView
 }
 
-// MARK: - Default Implementation
 public extension Coordinatorable {
     func push(_ page: Screen...) {
         page.forEach {

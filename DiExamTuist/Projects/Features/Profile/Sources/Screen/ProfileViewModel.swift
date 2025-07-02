@@ -14,10 +14,8 @@ public final class ProfileViewModel {
     public var isLoading: Bool = false
     public var errorMessage: String = ""
     
-    // ❌ DI 제거 - 레퍼런스 방식에서는 Mock 데이터 사용
     // @Dependency private var getUserUseCase: GetUserUseCaseProtocol
     
-    // ✅ Mock 프로필 데이터
     private let mockProfiles: [User] = [
         User(id: "1", name: "이지훈", email: "jihoon@profile.com"),
         User(id: "2", name: "김개발", email: "dev@profile.com"),
@@ -34,11 +32,9 @@ public final class ProfileViewModel {
         isLoading = true
         errorMessage = ""
         
-        // ✅ 실제 프로필 로딩 시뮬레이션
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
             guard let self = self else { return }
             
-            // Mock 데이터에서 첫 번째 사용자 선택 (실제로는 현재 로그인 사용자)
             self.user = self.mockProfiles.first
             self.isLoading = false
             
@@ -48,17 +44,14 @@ public final class ProfileViewModel {
         }
     }
     
-    // ✅ 나중에 Data 모듈 연동 시 이 메서드들만 수정하면 됨
     public func updateProfile(name: String, email: String) {
         isLoading = true
         
         print("📝 프로필 업데이트 시도 (Mock): \(name), \(email)")
         
-        // Mock 업데이트 시뮬레이션
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
             
-            // 업데이트된 사용자 정보 생성
             self.user = User(
                 id: self.user?.id ?? "1",
                 name: name,

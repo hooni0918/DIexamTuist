@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - User Repository Protocol (Domain Layer)
 public protocol UserRepository {
     func getCurrentUser() -> User?
     func updateUser(_ user: User)

@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Network Manager (향후 확장용)
 public class NetworkManager {
     public static let shared = NetworkManager()
     
@@ -18,7 +17,6 @@ public class NetworkManager {
         method: HTTPMethod = .GET,
         parameters: [String: Any]? = nil
     ) async throws -> T {
-        // 네트워크 요청 구현
         fatalError("Not implemented yet")
     }
 }

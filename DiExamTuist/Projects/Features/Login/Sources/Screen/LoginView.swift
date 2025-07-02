@@ -8,7 +8,6 @@
 import SwiftUI
 import Core
 import LoginDomain
-// ❌ LoginData import 제거!
 
 public struct LoginView: View {
     @Environment(LoginCoordinator.self) var coordinator

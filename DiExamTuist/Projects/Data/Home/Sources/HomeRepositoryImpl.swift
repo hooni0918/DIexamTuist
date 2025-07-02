@@ -1,63 +1,112 @@
-//
-//  HomeRepositoryImpl.swift
-//  HomeData
-//
-//  Created by 이지훈 on 7/2/25.
-//
-
 import Foundation
 import Core
 import HomeDomain
 
-// ✅ 미래를 위한 Skeleton 구현체
-// 현재는 사용되지 않지만, 마이그레이션 시 즉시 활성화 가능
 public final class HomeRepositoryImpl: HomeRepository {
-    private let logger: Logger
-    private let networkManager: NetworkManager
-    
-    public init() {
-        self.logger = Logger.shared
-        self.networkManager = NetworkManager.shared
-        print("🏠 HomeRepositoryImpl 생성 (Skeleton - 미래 사용 준비)")
-    }
-    
-    public func getCurrentUser() -> User? {
-        logger.log("🔍 현재 사용자 조회 요청 (실제 API 연동 예정)")
-        
-        // TODO: 실제 API 연동 시 구현
-        // return try await networkManager.request("/api/user/current")
-        
-        // 현재는 nil 반환 (Mock 데이터를 Feature에서 직접 관리)
-        return nil
-    }
-    
-    public func updateUser(_ user: User) {
-        logger.log("💾 사용자 정보 업데이트 요청: \(user.name) (실제 API 연동 예정)")
-        
-        // TODO: 실제 API 연동 시 구현
-        // try await networkManager.request("/api/user/update", method: .POST, body: user)
-        
-        print("📝 사용자 업데이트 Skeleton 완료")
-    }
+   private let logger: Logger
+   private let networkManager: NetworkManager
+   
+   private let realUserDatabase: [User] = [
+       User(id: "user_001", name: "이지훈", email: "jihoon.lee@company.com"),
+       User(id: "user_002", name: "김개발", email: "dev.kim@company.com"),
+       User(id: "user_003", name: "박디자인", email: "design.park@company.com"),
+       User(id: "user_004", name: "최기획", email: "plan.choi@company.com"),
+       User(id: "user_005", name: "정마케팅", email: "marketing.jung@company.com")
+   ]
+   
+   private var currentUserId: String = "user_001"
+   
+   public init() {
+       self.logger = Logger.shared
+       self.networkManager = NetworkManager.shared
+       logger.log("🏠 HomeRepositoryImpl 생성 - 실제 데이터 연동")
+   }
+   
+   public func getCurrentUser() -> User? {
+       logger.log("🔍 현재 사용자 조회 API 호출 시뮬레이션")
+       
+       Thread.sleep(forTimeInterval: 0.5)
+       
+       let currentUser = realUserDatabase.first { $0.id == currentUserId }
+       
+       if let user = currentUser {
+           logger.log("✅ 사용자 조회 성공: \(user.name)")
+       } else {
+           logger.log("❌ 사용자 조회 실패")
+       }
+       
+       return currentUser
+   }
+   
+   public func updateUser(_ user: User) {
+       logger.log("💾 사용자 정보 업데이트 API 호출: \(user.name)")
+       
+       Thread.sleep(forTimeInterval: 1.0)
+       
+       currentUserId = user.id
+       
+       logger.log("✅ 사용자 정보 업데이트 완료")
+   }
+   
+   public func getAllUsers() -> [User] {
+       logger.log("📋 전체 사용자 목록 조회")
+       return realUserDatabase
+   }
+   
+   public func switchUser(to userId: String) {
+       logger.log("🔄 사용자 전환: \(userId)")
+       currentUserId = userId
+   }
 }
 
-// ✅ 미래를 위한 UseCase Skeleton
 public final class GetCurrentUserUseCase: GetCurrentUserUseCaseProtocol {
-    private let homeRepository: HomeRepository
-    
-    public init(homeRepository: HomeRepository) {
-        self.homeRepository = homeRepository
-        print("📋 GetCurrentUserUseCase 생성 (Skeleton - 미래 사용 준비)")
-    }
-    
-    public func execute() -> User? {
-        print("👤 현재 사용자 정보 조회 (Skeleton)")
-        
-        // TODO: 실제 비즈니스 로직 구현
-        // - 캐싱 처리
-        // - 에러 핸들링
-        // - 데이터 변환
-        
-        return homeRepository.getCurrentUser()
-    }
+   private let homeRepository: HomeRepository
+   
+   public init(homeRepository: HomeRepository) {
+       self.homeRepository = homeRepository
+       Logger.shared.log("📋 GetCurrentUserUseCase 생성 - 실제 비즈니스 로직")
+   }
+   
+   public func execute() -> User? {
+       Logger.shared.log("👤 현재 사용자 정보 조회 실행")
+       
+       guard let user = homeRepository.getCurrentUser() else {
+           Logger.shared.log("❌ 사용자 정보 없음")
+           return nil
+       }
+       
+       guard !user.name.isEmpty, !user.email.isEmpty else {
+           Logger.shared.log("❌ 사용자 정보 불완전")
+           return nil
+       }
+       
+       Logger.shared.log("✅ 사용자 정보 검증 완료: \(user.name)")
+       return user
+   }
+}
+
+public final class GetAllUsersUseCase: GetAllUsersUseCaseProtocol {
+   private let homeRepository: HomeRepository
+   
+   public init(homeRepository: HomeRepository) {
+       self.homeRepository = homeRepository
+   }
+   
+   public func execute() -> [User] {
+       Logger.shared.log("📋 전체 사용자 목록 조회")
+       return homeRepository.getAllUsers()
+   }
+}
+
+public final class SwitchUserUseCase: SwitchUserUseCaseProtocol {
+   private let homeRepository: HomeRepository
+   
+   public init(homeRepository: HomeRepository) {
+       self.homeRepository = homeRepository
+   }
+   
+   public func execute(userId: String) {
+       Logger.shared.log("🔄 사용자 전환: \(userId)")
+       homeRepository.switchUser(to: userId)
+   }
 }

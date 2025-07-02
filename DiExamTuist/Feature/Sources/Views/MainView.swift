@@ -11,7 +11,6 @@ public struct MainView: View {
     @StateObject private var router: RouterImpl
     private let factory: ViewModelFactory
     
-    // MARK: - 프로덕션용 생성자
     public init() {
         print("📱 MainView 생성 시작")
         

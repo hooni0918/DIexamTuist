@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// MARK: - Reusable UI Component
 public struct NavigationButton: View {
     let title: String
     let icon: String

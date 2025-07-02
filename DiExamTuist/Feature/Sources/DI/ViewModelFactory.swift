@@ -8,22 +8,18 @@
 import Foundation
 import Domain
 
-// MARK: - ViewModel Factory (DI Container 캡슐화)
 public class ViewModelFactory {
     private let diContainer: DIContainerProtocol
     
-    // MARK: - 기본 생성자 (DIContainer 내부 생성)
     public init() {
         print("🏭 ViewModelFactory 생성 시작")
         self.diContainer = DIContainer()
         print("📦 DIContainer 생성 완료")
     }
     
-    // MARK: - HomeViewModel 생성
     public func makeHomeViewModel() -> HomeViewModel {
         print("🏠 HomeViewModel 생성 요청")
         
-        // DI Container에서 의존성 해결
         print("📋 GetCurrentUserUseCase 의존성 해결 중...")
         let getCurrentUserUseCase = diContainer.resolve(GetCurrentUserUseCase.self)!
         
@@ -37,7 +33,6 @@ public class ViewModelFactory {
         )
     }
     
-    // MARK: - ProfileViewModel 생성
     public func makeProfileViewModel() -> ProfileViewModel {
         print("👤 ProfileViewModel 생성 요청")
         
@@ -53,7 +48,6 @@ public class ViewModelFactory {
         )
     }
     
-    // MARK: - LoginViewModel 생성
     public func makeLoginViewModel() -> LoginViewModel {
         print("🔐 LoginViewModel 생성 요청")
         
@@ -67,7 +61,6 @@ public class ViewModelFactory {
         )
     }
     
-    // MARK: - Router 접근
     public func getRouter() -> any Router {
         print("🧭 Router 요청")
         return diContainer.resolve((any Router).self)!

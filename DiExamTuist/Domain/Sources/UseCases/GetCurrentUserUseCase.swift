@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - Get Current User Use Case (Domain Layer)
 public protocol GetCurrentUserUseCase {
     func execute() -> User?
 }

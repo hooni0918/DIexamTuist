@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-// MARK: - Router Protocol (Domain Layer)
 public protocol Router: AnyObject, ObservableObject {
     var currentRoute: Route { get set }
     func navigate(to route: Route)

@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Domain
 
-// MARK: - Login View Model (Presentation Layer)
 public class LoginViewModel: ObservableObject {
     @Published public var email: String = ""
     @Published public var password: String = ""

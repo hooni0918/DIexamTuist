@@ -9,7 +9,6 @@ import Foundation
 import Core
 import LoginDomain
 
-// ✅ 미래를 위한 Skeleton 구현체
 public final class AuthRepositoryImpl: AuthRepository {
     private var isLoggedIn = false
     private let logger: Logger
@@ -24,11 +23,9 @@ public final class AuthRepositoryImpl: AuthRepository {
     public func login(email: String, password: String) async -> Result<Bool, Error> {
         logger.log("🔑 로그인 요청: \(email) (실제 API 연동 예정)")
         
-        // TODO: 실제 API 연동 시 구현
         // let loginRequest = LoginRequest(email: email, password: password)
         // let response = try await networkManager.request("/api/auth/login", method: .POST, body: loginRequest)
         
-        // 현재는 실패 반환 (Mock 로직을 Feature에서 직접 관리)
         await Task.sleep(1_000_000_000) // 1초 대기 시뮬레이션
         return .failure(AuthError.unknown)
     }
@@ -36,7 +33,6 @@ public final class AuthRepositoryImpl: AuthRepository {
     public func logout() {
         logger.log("👋 로그아웃 요청 (실제 API 연동 예정)")
         
-        // TODO: 실제 로그아웃 로직 구현
         // - 토큰 삭제
         // - 캐시 클리어
         // - 서버 로그아웃 요청
@@ -46,7 +42,6 @@ public final class AuthRepositoryImpl: AuthRepository {
     }
     
     public func isLoggedIn() -> Bool {
-        // TODO: 실제 로그인 상태 확인 로직
         // - 토큰 유효성 검증
         // - 서버 상태 확인
         
@@ -54,7 +49,6 @@ public final class AuthRepositoryImpl: AuthRepository {
     }
 }
 
-// ✅ 미래를 위한 UseCase Skeleton들
 public final class LoginUseCase: LoginUseCaseProtocol {
     private let authRepository: AuthRepository
     
@@ -66,7 +60,6 @@ public final class LoginUseCase: LoginUseCaseProtocol {
     public func execute(email: String, password: String) async -> Result<Bool, Error> {
         print("🔐 로그인 실행 (Skeleton)")
         
-        // TODO: 실제 비즈니스 로직 구현
         // - 입력 검증
         // - 보안 처리
         // - 에러 핸들링
@@ -86,7 +79,6 @@ public final class LogoutUseCase: LogoutUseCaseProtocol {
     public func execute() {
         print("👋 로그아웃 실행 (Skeleton)")
         
-        // TODO: 실제 비즈니스 로직 구현
         // - 사용자 확인
         // - 데이터 정리
         // - 상태 초기화

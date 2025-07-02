@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Domain
 
-// MARK: - Profile View Model (Presentation Layer)
 public class ProfileViewModel: ObservableObject {
     @Published public var user: User?
     @Published public var isLoading: Bool = false

@@ -11,7 +11,6 @@ public struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     private let router: any Router
     
-    // MARK: - 생성자 (의존성 주입)
     public init(viewModel: HomeViewModel, router: any Router) {
         print("🏠 HomeView 초기화 시작")
         self._viewModel = StateObject(wrappedValue: viewModel)

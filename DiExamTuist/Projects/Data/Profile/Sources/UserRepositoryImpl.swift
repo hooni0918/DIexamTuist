@@ -9,7 +9,6 @@ import Foundation
 import Core
 import ProfileDomain
 
-// ✅ 미래를 위한 Skeleton 구현체
 public final class UserRepositoryImpl: UserRepository {
     private var currentUser: User?
     private let logger: Logger
@@ -24,11 +23,9 @@ public final class UserRepositoryImpl: UserRepository {
     public func getCurrentUser() -> User? {
         logger.log("🔍 현재 사용자 정보 조회 (실제 API 연동 예정)")
         
-        // TODO: 실제 API 연동 시 구현
         // let response = try await networkManager.request("/api/profile")
         // return User.fromDTO(response)
         
-        // 현재는 기본값 반환 (Mock 데이터를 Feature에서 직접 관리)
         return currentUser ?? User(
             id: "skeleton_user",
             name: "Skeleton User",
@@ -39,7 +36,6 @@ public final class UserRepositoryImpl: UserRepository {
     public func updateUser(_ user: User) {
         logger.log("💾 사용자 정보 업데이트: \(user.name) (실제 API 연동 예정)")
         
-        // TODO: 실제 API 연동 시 구현
         // let updateRequest = UpdateUserRequest.fromUser(user)
         // try await networkManager.request("/api/profile", method: .PUT, body: updateRequest)
         
@@ -48,7 +44,6 @@ public final class UserRepositoryImpl: UserRepository {
     }
 }
 
-// ✅ 미래를 위한 UseCase Skeleton들
 public final class GetUserUseCase: GetUserUseCaseProtocol {
     private let userRepository: UserRepository
     
@@ -60,7 +55,6 @@ public final class GetUserUseCase: GetUserUseCaseProtocol {
     public func execute() -> User? {
         print("👤 사용자 정보 조회 실행 (Skeleton)")
         
-        // TODO: 실제 비즈니스 로직 구현
         // - 캐싱 처리
         // - 권한 확인
         // - 데이터 변환
@@ -80,7 +74,6 @@ public final class UpdateUserUseCase: UpdateUserUseCaseProtocol {
     public func execute(_ user: User) {
         print("📝 사용자 정보 업데이트 실행 (Skeleton)")
         
-        // TODO: 실제 비즈니스 로직 구현
         // - 입력 검증
         // - 권한 확인
         // - 변경사항 추적
